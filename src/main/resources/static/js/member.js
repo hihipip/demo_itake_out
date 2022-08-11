@@ -1,0 +1,3 @@
+function testClick(){
+    alert("TEST");
+}

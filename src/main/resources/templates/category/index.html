@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extra-springsecurity5">
+
+<div th:replace="~{include/meta::meta_html}"></div>
+<body>
+
+
+<div sec:authorize="isAuthenticated()">
+    Authenticated as <span sec:authentication="name">
+</span>
+</div>
+
+<div class="container">
+    <h1>分類列表</h1>
+    <form th:action="@{/web/category/}" method="get" th:object="${searchVo}">
+        姓名︰<input type="text" th:field="*{searchName}" />
+        <input type="submit" value="search" />
+    </form>
+
+    <a th:href="@{/web/category/add/}">新建</a>
+    <table border="1" class="table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>名稱</th>
+            <th>類型</th>
+            <th>排序</th>
+           <th>建立時間</th>
+            <th>功能</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="category:${categories}">
+            <td th:text="${category.id}"></td>
+            <td th:text="${category.name}"></td>
+            <td th:text="${category.type}"></td>
+            <td th:text="${category.sort}"></td>
+            <td th:text="${#dates.format(category.createTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
+            <td>
+                <a th:href="@{/web/category/edit/{id}(id=${category.id})}">修改</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        目前頁<span th:text="${categories.pageable.pageNumber}"></span>
+        總頁數︰<span th:text="${categories.totalPages}"></span>
+        總筆數︰<span th:text="${categories.totalElements}"></span>
+    </div>
+    <a th:href="@{/web/category/?searchName={searchName}&page={page}(searchName=${searchVo.searchName},page=${categories.pageable.pageNumber-1})}">上一頁</a>
+    <a th:href="@{/web/category/?searchName={searchName}&page={page}(searchName=${searchVo.searchName},page=${categories.pageable.pageNumber+1})}">下一頁</a>
+
+</div>
+
+<div th:replace="~{include/meta::footer_html}"></div>
+
+</body>
+</html>
+
+

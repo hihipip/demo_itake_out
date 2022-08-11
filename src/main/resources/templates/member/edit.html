@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="~{include/meta::meta_html}"></div>
+<body>
+<div class="container">
+    <h1>修改管理者</h1>
+
+
+
+    <form th:action="@{/web/member/editSave}" th:object="${member}" method="post">
+        <div th:if="${#fields.hasAnyErrors()}">
+            <ul>
+                <li th:each="err:${#fields.allErrors()}" th:text="${err}" />
+            </ul>
+        </div>
+        <input type="text" class="form-control" th:field="*{id}" />
+        <div class="form-group">
+            <label>姓名︰</label>
+            <input type="text" class="form-control" th:field="*{name}"/>
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" />
+        </div>
+        <div class="form-group">
+            <label>帳號︰</label>
+            <input type="text" class="form-control" th:field="*{username}"/>
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}" />
+        </div>
+        <div class="form-group">
+            <label>密碼︰</label>
+            <input type="text" class="form-control" th:field="*{password}"/>
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" />
+        </div>
+        <div class="form-group">
+            <label>電話︰</label>
+            <input type="text" class="form-control" th:field="*{phone}" />
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" />
+        </div>
+        <div class="form-group">
+            <label>生日︰</label>
+            <input type="date" class="form-control" th:field="*{birthday}" />
+        </div>
+        <div class="form-group">
+            <label>權限</label>
+            <select th:field="*{role}">
+                <option th:each="role:${T(com.boss.demo.tools.ItemsInfo).getMemberRole()}"
+                        th:value="${role.code}" th:text="${role.value}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>性別︰</label>
+            <input type="radio" name="sexual" value="0" th:checked="*{sexual==0}">女
+            <input type="radio" name="sexual" value="1" th:checked="*{sexual==1}">男
+            <input type="radio" name="sexual" value="2" th:checked="*{sexual==2}">未知
+        </div>
+        <div>
+            <input type="submit" class="btn" value="保存" />
+        </div>
+
+    </form>
+    <hr>
+    <a th:href = "@{/web/member/}">回列表</a>
+
+
+</div>
+
+<div th:replace="~{include/meta::footer_html}"></div>
+
+</body>
+</html>
+
+
