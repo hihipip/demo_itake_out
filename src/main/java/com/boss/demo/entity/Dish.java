@@ -21,7 +21,8 @@ public class Dish extends BaseEntity {
     @Min(value = 1)
     private int price;
 
-    private long category_id;
+    @Column(name = "category_id")
+    private long categoryId;
 
     @NotBlank(message = "請上傳圖片")
     private String image;

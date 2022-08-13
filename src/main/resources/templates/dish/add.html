@@ -7,7 +7,7 @@
     <h1>菜品管理</h1>
 
 
-    <form th:action="${dishVo.id==0} ? @{/web/dish/addSave} : @{/web/category/editSave}" th:object="${dishVo}" method="post">
+    <form th:action="${dishVo.id==0} ? @{/web/dish/addSave} : @{/web/dish/editSave}" th:object="${dishVo}" method="post">
         <input type="hidden" class="form-control" th:field="*{id}" />
         <div th:if="${#fields.hasAnyErrors()}">
             <ul>
@@ -27,7 +27,7 @@
         </div>
         <div class="form-group">
             <label>分類</label>
-            <select class="form-control" th:field="*{category_id}">
+            <select class="form-control" th:field="*{categoryId}">
                 <option th:each="category:${categories}"
                         th:value="${category.id}" th:text="${category.name}"></option>
             </select>
@@ -57,6 +57,7 @@
                 <input th:name="|dishFlavors[${itemStat.index}].name|" th:value="${flavor.getName()}" />
                 <input th:name="|dishFlavors[${itemStat.index}].description|"  th:value="${flavor.getDescription()}"  />
             </div>
+            <!--
             <div>
                 <input name="dishFlavors[0].name" value="甜度" />
                 <input name="dishFlavors[0].description" value="全糖、半糖、無糖" />
@@ -65,6 +66,7 @@
                 <input name="dishFlavors[1].name" value="辣度" />
                 <input name="dishFlavors[1].description" value="全辣、半辣、不辣" />
             </div>
+            -->
         </div>
 
 

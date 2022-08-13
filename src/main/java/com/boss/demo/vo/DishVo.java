@@ -5,9 +5,10 @@ import com.boss.demo.entity.DishFlavor;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class DishVo extends Dish {
-    private ArrayList<DishFlavor> dishFlavors;
+    private List<DishFlavor> dishFlavors;
     private String category_name;
 }

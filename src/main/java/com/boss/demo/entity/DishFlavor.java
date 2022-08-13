@@ -23,7 +23,8 @@ public class DishFlavor extends BaseEntity {
     @NotBlank(message = "請填寫名稱")
     private String name;
 
-    private long dish_id;
+    @Column(name = "dish_id")
+    private long dishId;
 
     private String description;
 

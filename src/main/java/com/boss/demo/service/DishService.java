@@ -10,7 +10,9 @@ public interface DishService {
 
     DishVo saveDishWithFlavor(DishVo dishVo);
     Page<DishVo> getAllDish(SearchVo searchVo);
+    DishVo getDishWithFlavor(long id);
 
+    DishVo update(DishVo dishVo,Long dishId);
 
 
 }

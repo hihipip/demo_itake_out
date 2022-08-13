@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -41,7 +42,6 @@ public class WebDishController {
 
     @PostMapping("/addSave")
     public String addSave(@Valid DishVo dishVo, BindingResult result,Model model){
-
         try {
             dishService.saveDishWithFlavor(dishVo);
         }catch(Exception e){
@@ -53,10 +53,21 @@ public class WebDishController {
             this.setModel(model,dishVo);
             return "dish/add";
         }
-        return "redirect:/web/member/";
+        return "redirect:/web/dish/";
     }
 
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable(value = "id") long id, Model model){
+        DishVo dishVo = dishService.getDishWithFlavor(id);
+        this.setModel(model,dishVo);
+        return "dish/add";
+    }
 
+    @PostMapping("/editSave")
+    public String editSave(@Valid DishVo dishVo,Model model){
+        dishService.update(dishVo,dishVo.getId());
+        return "redirect:/web/dish/";
+    }
 
 
 
