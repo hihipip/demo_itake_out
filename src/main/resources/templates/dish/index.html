@@ -53,6 +53,13 @@
     <a th:href="@{/web/dish/?searchName={searchName}&page={page}(searchName=${searchVo.searchName},page=${dishVos.pageable.pageNumber-1})}">上一頁</a>
     <a th:href="@{/web/dish/?searchName={searchName}&page={page}(searchName=${searchVo.searchName},page=${dishVos.pageable.pageNumber+1})}">下一頁</a>
 
+
+
+
+    <div th:text="${T(com.boss.demo.tools.ItemsInfo).toUpperCase('HelloWorld')}"></div>
+
+    <div th:text="${memberService.getMemberById(1).getName()}"></div>
+
 </div>
 
 <div th:replace="~{include/meta::footer_html}"></div>

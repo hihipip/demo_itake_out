@@ -33,4 +33,8 @@ public class ItemsInfo {
     }
 
 
+    public static String toUpperCase(String s){
+        return s.toLowerCase();
+    }
+
 }

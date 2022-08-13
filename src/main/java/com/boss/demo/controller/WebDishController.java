@@ -75,6 +75,8 @@ public class WebDishController {
     public String list(SearchVo searchVo, Model model){
         model.addAttribute("searchVo", searchVo); //搜尋參數
         model.addAttribute("dishVos", dishService.getAllDish(searchVo));
+        model.addAttribute("memberService", memberService);
+
         return "dish/index";
     }
 
@@ -87,7 +89,13 @@ public class WebDishController {
             dishVo.setDishFlavors(dishFlavors);
         }
         model.addAttribute("dishVo", dishVo);
+        //thymleaf
+        model.addAttribute("memberService", memberService);
     }
+
+    @Autowired
+    MemberService memberService;
+
 
 
 }

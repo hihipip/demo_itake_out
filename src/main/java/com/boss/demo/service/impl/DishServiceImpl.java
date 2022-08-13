@@ -108,6 +108,9 @@ public class DishServiceImpl implements DishService {
             if( category!=null ){
                 dishVo.setCategory_name(category.getName());
             }
+            //再抓另一個表
+            //List<DishFlavor> dishFlavors = dishFlavorRepository.findByDishId(dish.getId());
+            //dishVo.setDishFlavors(dishFlavors);
             return dishVo;
         });
         return dishVoPages;
