@@ -16,6 +16,10 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
 
     Page<Member> findAllByNameLikeOrUsernameContains(String name,String username, Pageable pageable);
 
+    Page<Member> findAllByNameLike(String name, Pageable pageable);
+
+
+
     Member findByUsername(String username);
 
 

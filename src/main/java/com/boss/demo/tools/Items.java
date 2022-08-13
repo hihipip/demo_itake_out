@@ -15,4 +15,8 @@ public class Items {
         public static final int MANAGER=1; //管理者
         public static final int ADMIN=2; //最高管理者
     }
+
+
+
+
 }

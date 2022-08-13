@@ -14,6 +14,6 @@ public interface CategoryService {
     Category getCategoryById(long id);
     Page<Category> getCategories(SearchVo searchVo);
     Category updateCategory(Category category);
-    List<Category> getAll();
+    List<Category> getAll(int type);
 
 }

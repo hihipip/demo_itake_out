@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -36,6 +37,7 @@ public class WebMemberController {
 
     @GetMapping("/add")
     public String add(Model model, HttpServletRequest request){
+        this.setModel(model);
         model.addAttribute("member", new Member());
         return "member/add";
     }
@@ -49,6 +51,7 @@ public class WebMemberController {
             result.addError(error);
         }
         if( result.hasErrors() ){
+            this.setModel(model);
             return "member/add";
         }
         return "redirect:/web/member/";
@@ -57,6 +60,8 @@ public class WebMemberController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable(value = "id") long id,Model model){
         Member member = memberService.getMemberById(id);
+        this.setModel(model);
+        member.setInterests(member.getInterest().split(","));
         model.addAttribute("member", member);
         return "member/edit";
     }
@@ -71,6 +76,11 @@ public class WebMemberController {
     public String delete(@PathVariable("id") long id, Model model) {
         memberService.delete(id);
         return "redirect:/web/member/";
+    }
+
+    private void setModel(Model model){
+        String[] interests = new String[]{"藍球", "棒球", "足球", "撞球"};
+        model.addAttribute("interests", interests);
     }
 
 }

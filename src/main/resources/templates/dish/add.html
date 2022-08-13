@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="~{include/meta::meta_html}"></div>
+<body>
+<div class="container">
+    <h1>菜品管理</h1>
+
+
+    <form th:action="${dishVo.id==0} ? @{/web/dish/addSave} : @{/web/category/editSave}" th:object="${dishVo}" method="post">
+        <input type="hidden" class="form-control" th:field="*{id}" />
+        <div th:if="${#fields.hasAnyErrors()}">
+            <ul>
+                <li th:each="err:${#fields.allErrors()}" th:text="${err}" />
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <label>名稱</label>
+            <input type="text" class="form-control" th:field="*{name}" />
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" />
+        </div>
+        <div class="form-group">
+            <label>價格</label>
+            <input type="text" class="form-control" th:field="*{price}" />
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('price')}" th:errors="*{price}" />
+        </div>
+        <div class="form-group">
+            <label>分類</label>
+            <select class="form-control" th:field="*{category_id}">
+                <option th:each="category:${categories}"
+                        th:value="${category.id}" th:text="${category.name}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>圖片</label>
+            <input type="text" class="form-control" th:field="*{image}" />
+            <img style="width:150px" th:src="@{/web/common/download?fileName={fileName}(fileName=*{image})}" th:if="*{image!=null}"/>
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('image')}" th:errors="*{image}" />
+        </div>
+        <div class="form-group">
+            <label>順序</label>
+            <select class="form-control" th:field="*{sort}">
+                <option th:each="i : ${#numbers.sequence(0, 10)}" th:value="${i}" th:text="${i}">
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>描述</label>
+            <textarea class="form-control" th:field="*{description}"></textarea>
+            <div class="alert alert-warning" th:if="${#fields.hasErrors('description')}" th:errors="*{description}" />
+        </div>
+
+        <div class="form-group">
+            <label>口味</label>
+            <div th:each="flavor, itemStat : *{dishFlavors}">
+                <input th:name="|dishFlavors[${itemStat.index}].name|" th:value="${flavor.getName()}" />
+                <input th:name="|dishFlavors[${itemStat.index}].description|"  th:value="${flavor.getDescription()}"  />
+            </div>
+            <div>
+                <input name="dishFlavors[0].name" value="甜度" />
+                <input name="dishFlavors[0].description" value="全糖、半糖、無糖" />
+            </div>
+            <div>
+                <input name="dishFlavors[1].name" value="辣度" />
+                <input name="dishFlavors[1].description" value="全辣、半辣、不辣" />
+            </div>
+        </div>
+
+
+
+        <div>
+            <input type="submit" class="btn btn-primary" value="保存" />
+        </div>
+    </form>
+    <a th:href = "@{/web/category/}">回列表</a>
+
+
+</div>
+
+<div th:replace="~{include/meta::footer_html}"></div>
+
+
+
+
+
+
+
+<script>
+    function setImageFile(fileName){
+        $("#image").val(fileName);
+    }
+</script>
+<form th:action="@{/web/common/upload}" method="post" enctype="multipart/form-data" target="ifr">
+    <div>
+        <input type="file" name="file" />
+    </div>
+    <div>
+        <input type="submit" class="btn btn-primary" value="上傳檔案" />
+    </div>
+</form>
+<iframe id="ifr" name="ifr"></iframe>
+
+
+
+</body>
+</html>
+
+

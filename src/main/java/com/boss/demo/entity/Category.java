@@ -19,13 +19,12 @@ import java.util.Date;
 
 @Entity
 @Table(name = "tb_category")
-@EntityListeners(AuditingEntityListener.class) //自動填充
 @Data
-public class Category {
+public class Category extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id = 0L;
 
     @NotBlank(message = "請填寫分類名稱")
     private String name;
@@ -36,16 +35,6 @@ public class Category {
 
     private int sort;
 
-    @CreatedDate
-    private Date createTime;
 
-    @LastModifiedDate
-    private Date updateTime;
-
-    @CreatedBy
-    private Long createUser;
-
-    @LastModifiedBy
-    private Long updateUser;
 
 }

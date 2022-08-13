@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member saveMember(Member member) {
+        if( member.getInterests()!=null ){
+            member.setInterest(StringUtils.join(member.getInterests(),","));
+        }
         return memberRepository.save(member);
     }
 
@@ -71,6 +75,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member update(Member member,Long memberId) {
+        if( member.getInterests()!=null ){
+            member.setInterest(StringUtils.join(member.getInterests(),","));
+        }
         Member dbMember = memberRepository.findById(memberId).get();
         member.setCreateTime(dbMember.getCreateTime());
         member.setCreateUser(dbMember.getCreateUser());

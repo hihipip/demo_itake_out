@@ -52,12 +52,19 @@
             <input type="radio" name="sexual" value="1" th:checked="*{sexual==1}">男
             <input type="radio" name="sexual" value="2" th:checked="*{sexual==2}">未知
         </div>
+        <div class="form-group">
+            <label>興趣︰</label>
+            <span th:each="interest : ${interests}">
+                <input type="checkbox"  th:field="*{interests}" th:value="${interest}" />
+                <label th:for="${#ids.prev('interests')}" th:text="${interest}"></label>
+            </span>
+        </div>
         <div>
             <input type="submit" class="btn" value="保存" />
         </div>
 
     </form>
-    <hr>
+
     <a th:href = "@{/web/member/}">回列表</a>
 
 

@@ -2,6 +2,7 @@ package com.boss.demo.entity;
 
 import com.boss.demo.validate.IsMobile;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,15 +17,15 @@ import java.util.Date;
 
 @Entity
 @Table(name="tb_member")
-@EntityListeners(AuditingEntityListener.class)
 @Data
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "請填寫姓名")
+    @Column(name = "name")
     private String name;
 
     @IsMobile
@@ -33,8 +34,14 @@ public class Member {
     @NotBlank
     private String username;
 
+    @JsonIgnore
     @NotBlank
     private String password;
+
+    private String interest;
+
+    @Transient
+    private String[] interests;
 
     private int sexual;
 
@@ -44,17 +51,6 @@ public class Member {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date birthday;
 
-    @CreatedDate
-    private Date createTime;
-
-    @LastModifiedDate
-    private Date updateTime;
-
-    @CreatedBy
-    private Long createUser;
-
-    @LastModifiedBy
-    private Long updateUser;
 
 
 

@@ -55,9 +55,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAll() {
+    public List<Category> getAll(int type) {
         Sort sort = Sort.by(Sort.Direction.ASC,"sort");
-        List<Category> list = categoryRepository.findAll(sort);
+        List<Category> list = categoryRepository.findByType(type,sort);
         return list;
     }
 }

@@ -29,6 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //解決 in a frame because it set X-Frame-Options to
+        http.headers().frameOptions().disable();
+        http.csrf().disable();
         http.formLogin()
                 .loginPage("/web/login") // 自定義登入介面
                 //.failureUrl("/web/login?error") // 登入失敗介面
@@ -47,7 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                  */
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
-                .exceptionHandling().accessDeniedPage("/web/403"); // 权限不足自动跳转403
+                .exceptionHandling().accessDeniedPage("/web/403")
+                ; // 权限不足自动跳转403
     }
 
     /**
