@@ -1,5 +1,6 @@
 package com.boss.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,16 +19,20 @@ import java.util.Date;
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
 
+    @JsonIgnore
     @CreatedDate
     @Column(name = "create_time")
     private Date createTime;
 
+    @JsonIgnore
     @LastModifiedDate
     private Date updateTime;
 
+    @JsonIgnore
     @CreatedBy
     private Long createUser;
 
+    @JsonIgnore
     @LastModifiedBy
     private Long updateUser;
 

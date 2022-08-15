@@ -13,4 +13,6 @@ public class SearchVo {
     private String startDate="";
     private String endDate="";
     private int page=0;
+    private int categoryId=0;
+
 }

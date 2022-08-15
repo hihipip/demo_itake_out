@@ -116,6 +116,36 @@ public class DishServiceImpl implements DishService {
         return dishVoPages;
     }
 
+    /**
+     * 抓取所有菜品
+     * @param searchVo
+     * @return
+     */
+    @Override
+    public List<DishVo> getAll(SearchVo searchVo) {
+        List<Dish> dishs = null;
+        if( searchVo.getCategoryId()==0 ){
+            dishs = dishRepository.findAll(Sort.by(Sort.Direction.ASC, "sort"));
+        } else {
+            dishs = dishRepository.findAllByCategoryIdAndStatus(searchVo.getCategoryId(), 0,Sort.by(Sort.Direction.ASC, "sort"));
+        }
+        List<DishVo> dishVos = dishs.stream().map(dish -> {
+            DishVo dishVo = new DishVo();
+            BeanUtils.copyProperties(dish,dishVo);
+            Category category = categoryRepository.getReferenceById(dish.getCategoryId());
+            if( category!=null ){
+                dishVo.setCategory_name(category.getName());
+            }
+            List<DishFlavor> dishFlavors = dishFlavorRepository.findByDishId(dish.getId());
+            dishVo.setDishFlavors(dishFlavors);
+            return dishVo;
+        }).collect(Collectors.toList());
+        return dishVos;
+
+    }
+
+
+
     public DishVo getDishWithFlavor(long id){
         Dish dish = dishRepository.getReferenceById(id);
         if( dish==null ) return null;
