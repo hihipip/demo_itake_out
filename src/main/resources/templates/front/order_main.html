@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extra-springsecurity5">
+
+<div th:replace="~{include/meta::meta_html}"></div>
+<body>
+
+<div th:replace="~{include/nav::nva_html('order_main')}"></div>
+
+
+<div class="container">
+    <h1>我的訂單</h1>
+    <table border="1" class="table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>訂單SN</th>
+            <th>電話</th>
+            <th>地址</th>
+            <th>訂單金額</th>
+            <th>訂單時間</th>
+            <th>訂單狀態</th>
+            <th>明細</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="orderMain:${orderMains}">
+            <td th:text="${orderMain.phone}"></td>
+            <td th:text="${orderMain.address}"></td>
+            <td th:text="${orderMain.orderSn}"></td>
+            <td th:text="${orderMain.amount}"></td>
+            <td th:text="${orderMain.orderTime}"></td>
+            <td th:text="${orderMain.status}"></td>
+            <td>
+                <div th:each="orderDetail:${orderMain.orderDetails}">
+                    <div th:text="${orderDetail.name}"></div>
+                    <div th:text="${orderDetail.image}"></div>
+                    <div th:text="${orderDetail.dishFlavor}"></div>
+                    <div th:text="${orderDetail.number}"></div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+</div>
+
+<div th:replace="~{include/meta::footer_html}"></div>
+
+
+
+</body>
+</html>
+
+

@@ -9,6 +9,7 @@ import com.boss.demo.service.CategoryService;
 import com.boss.demo.service.DishService;
 import com.boss.demo.service.SetmealService;
 import com.boss.demo.vo.DishVo;
+import com.boss.demo.vo.SearchVo;
 import com.boss.demo.vo.SetmealVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -54,20 +56,41 @@ public class WebSetmealController {
         }
         if( result.hasErrors() ){
             this.setModel(model,setmealVo);
-            return "dish/add";
+            return "setmeal/add";
         }
-        return "redirect:/web/dish/";
+        return "redirect:/web/setmeal/";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable(value = "id") long id, Model model){
+        SetmealVo setmealVo = setmealService.getSetmealWithDish(id);
+        this.setModel(model,setmealVo);
+        return "setmeal/add";
+    }
+
+    @PostMapping("/editSave")
+    public String editSave(@Valid SetmealVo setmealVo,Model model){
+        setmealService.update(setmealVo,setmealVo.getId());
+        return "redirect:/web/setmeal/";
     }
 
 
+    @GetMapping("/")
+    public String list(SearchVo searchVo, Model model){
+        model.addAttribute("searchVo", searchVo); //搜尋參數
+        model.addAttribute("setmealVos", setmealService.getAllSetmeal(searchVo));
+        return "setmeal/index";
+    }
+
+
+
     private void setModel(Model model, SetmealVo setmealVo){
-        List<Category> categoryList = categoryService.getAll(1);
+        List<Category> categoryList = categoryService.getAll(2);
         model.addAttribute("categories", categoryList);
         if( setmealVo==null ){
             setmealVo = new SetmealVo();
             ArrayList<SetmealDish> setmealDishes = new ArrayList<>();
             setmealVo.setSetmealDishes(setmealDishes);
-
         }
         model.addAttribute("setmealVo", setmealVo);
     }

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extra-springsecurity5">
+
+<div th:replace="~{include/meta::meta_html}"></div>
+<body>
+
+<div th:replace="~{include/nav::nva_html('index')}"></div>
+
+
+<div class="container">
+    <h1>菜單列表</h1>
+    <div sec:authorize="isAuthenticated()">
+        Authenticated as <span sec:authentication="name"></span>
+    </div>
+    <div th:text="${#authentication.getAuthorities()}"></div>
+    <div sec:authorize="${isAuthenticated()}">
+        <a class="item" th:href="@{/web/logout}">
+            <i class="sign-out icon"></i>登出</a>
+    </div>
+    <h1>產品分類</h1>
+    <ul class="list-group">
+        <li class="list-group-item" th:each="category:${categories}">
+            <a th:href="@{/front/?categoryId={categoryId}(categoryId=${category.id})}" th:text="${category.name}"></a>
+        </li>
+    </ul>
+    <h1>產品列表</h1>
+    <table border="1" class="table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>名稱</th>
+            <th>圖片</th>
+            <th>價格</th>
+            <th>份數</th>
+            <th>功能</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="dish:${dishVos}">
+            <td th:text="${dish.name}"></td>
+            <td><img th:src="@{/web/common/download?fileName={fileName}(fileName=${dish.image})}" style="width:50px"/></td>
+            <td th:text="${dish.price}"></td>
+            <td>
+                <select th:id="'dish_number_'+${dish.id}">
+                    <option th:each="i : ${#numbers.sequence(1, 10)}" th:value="${i}" th:text="${i}">
+                    </option>
+                </select>
+            </td>
+            <td>
+                <div>總共 <span th:text="${dish.dishFlavors.size}"></span> 口味</div>
+                <div style="display:none">
+                    <div th:id="'dish_id_'+${dish.id}">
+                        <span th:each="dishFlavors:${dish.dishFlavors}" th:text="${dishFlavors.id}"/>
+                    </div>
+                    <div th:id="'dish_name_'+${dish.id}">
+                        <span th:each="dishFlavors:${dish.dishFlavors}" th:text="${dishFlavors.name}"/>
+                    </div>
+                    <div th:id="'dish_description_'+${dish.id}">
+                        <span th:each="dishFlavors:${dish.dishFlavors}" th:text="${dishFlavors.description}" />
+                    </div>
+                </div>
+                <button class="btn btn-primary" th:onclick="addToCart('dish',[[${dish.id}]]);">加入購物車</button>
+            </td>
+        </tr>
+        <tr th:each="setmeal:${setmealVos}">
+            <td th:text="${setmeal.name}"></td>
+            <td><img th:src="@{/web/common/download?fileName={fileName}(fileName=${setmeal.image})}" style="width:50px"/></td>
+            <td th:text="${setmeal.price}"></td>
+            <td><input type="text" th:id="'setmeal_number_'+${setmeal.id}" size="5" value="1" /></td>
+            <td>
+                <button class="btn btn-primary" th:onclick="addToCartReal('setmeal',[[${setmeal.id}]]);">加入購物車</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+</div>
+
+<div th:replace="~{include/meta::footer_html}"></div>
+<script>
+
+    var dish_id = "";
+    var dish_flavor = "";
+    function addToCart(field,id){
+        if( field=="dish" ){
+            dish_id = id;
+            dish_flavor = "";
+            $("#modalDiv").modal({backdrop: 'static',keyboard: false});
+            var flavors_ids = $('#dish_id_'+id).children();
+            var flavors_names = $('#dish_name_'+id).children();
+            var flavors_descriptions = $('#dish_description_'+id).children();
+            var html = '<div>';
+            for(var i=0;i<flavors_ids.length;i++){
+                var flavor_id = $(flavors_ids[i]).html();
+                var name = $(flavors_names[i]).html();
+                var description = $(flavors_descriptions[i]).html();
+                html += '<div>';
+                html += name;
+                html += " : ";
+                var desc = description.split('、');
+                for(var j=0;j<desc.length;j++){
+                    html += '&nbsp;&nbsp;<input type="radio" name="desc_'+flavor_id+'" value="'+name+':'+desc[j]+'" '+(j==0?" checked":"")+' />'+desc[j];
+                }
+                html += '</div>';
+            }
+            html += '</div>';
+            $("#modal_body").html(html);
+        }
+    }
+    function pickFlavorCompleted(){
+        var flavors_ids = $('#dish_id_'+dish_id).children();
+        for(var i=0;i<flavors_ids.length;i++){
+            var flavor_id = $(flavors_ids[i]).html();
+            dish_flavor += $("input[name='desc_"+flavor_id+"']:checked").val();
+            dish_flavor += ",";
+        }
+        $("#modalDiv").modal('hide');
+        addToCartReal('dish',dish_id);
+    }
+
+
+    function addToCartReal(field,id){
+        var dish_id = this.dish_id;
+        var setmeal_id = "";
+        var dish_flavor = this.dish_flavor;
+        var number = 1;
+        if( field=="setmeal" ){
+            dish_id = 0;
+            setmeal_id = id;
+            dish_flavor = "";
+            number = $("#setmeal_number_"+setmeal_id).val();
+        } else if( field=="dish" ) {
+            setmeal_id = 0;
+            number = $("#dish_number_"+dish_id).val();
+        }
+
+
+        var obj = {}
+        obj["dishId"] = dish_id;
+        obj["setmealId"] = setmeal_id;
+        obj["dishFlavor"] = dish_flavor;
+        obj["number"] = number;
+        var jsonData= JSON.stringify( obj);
+
+        console.log(jsonData);
+        $.ajax({
+            type: "post",
+            url: "/front/addToCart?rnd=" + new Date(),
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            data: jsonData,
+            success: function (response) {
+                console.log(response);
+                if( response.success ){
+                    alert("加入購物車成功");
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (thrownError) {
+              console.log(thrownError);
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+    }
+</script>
+
+
+<div class="modal" tabindex="-1" id="modalDiv">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">請挑選口味</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal_body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="pickFlavorCompleted()">加入購物車</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>
+
+

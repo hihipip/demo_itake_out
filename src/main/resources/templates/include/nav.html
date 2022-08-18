@@ -1,0 +1,31 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extra-springsecurity5">
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="nva_html(act)">
+    <a class="navbar-brand" href="#">購餐系統</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item" th:classappend="${act}=='index'?'active':''">
+                <a class="nav-link"  href="/front">首頁</a>
+            </li>
+            <li class="nav-item" th:classappend="${act}=='cart'?'active':''">
+                <a class="nav-link" href="/front/viewcart">購物車</a>
+            </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${act}=='order_main'?'active':''">
+                <a class="nav-link" href="/front/order">我的訂單</a>
+            </li>
+            <li sec:authorize="!isAuthenticated()" class="nav-item" th:classappend="${act}==''?'active':''">
+                <a class="nav-link" href="/front/login">登入</a>
+            </li>
+        </ul>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        Authenticated as <span sec:authentication="name" />
+    </div>
+</nav>
+
+
+
+

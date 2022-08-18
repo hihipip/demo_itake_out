@@ -2,6 +2,7 @@ package com.boss.demo.handler;
 
 import com.boss.demo.handler.MyException;
 import com.boss.demo.tools.R;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,7 @@ public class GlobalExceptionHandler {
     //@ResponseBody
     @ExceptionHandler(SQLException.class)
     public ModelAndView handlerConstraintViolationException(Exception e) {
+        e.printStackTrace();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("errorSomething","somerror");
         modelAndView.setViewName("error");
@@ -46,6 +48,8 @@ public class GlobalExceptionHandler {
         return R.error().message("全局異常處理");
     }
 */
+
+
 
 
     // For UI Pages

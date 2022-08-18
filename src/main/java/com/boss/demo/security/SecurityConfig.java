@@ -3,6 +3,8 @@ package com.boss.demo.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 
 @Configuration
@@ -50,8 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                  */
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
-                .exceptionHandling().accessDeniedPage("/web/403")
-                ; // 权限不足自动跳转403
+                .exceptionHandling().accessDeniedPage("/web/403"); // 权限不足自动跳转403
+        http.logout().permitAll();
+        http.logout().logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
     }
 
     /**
@@ -60,7 +64,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private TokenBasedRememberMeServices getRememberMeServices() {
         TokenBasedRememberMeServices services = new TokenBasedRememberMeServices(SECRET_KEY, myUserDetailsService);
         services.setCookieName("remember-cookie");
-        services.setTokenValiditySeconds(100); // 默认14天
+        services.setTokenValiditySeconds(10000); // 默认14天
         return services;
     }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
 }

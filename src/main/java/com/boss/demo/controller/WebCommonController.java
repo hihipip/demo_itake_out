@@ -21,7 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-@IsAdmin
+
 @Controller
 @RequestMapping("web/common")
 public class WebCommonController {
@@ -34,6 +34,7 @@ public class WebCommonController {
         return "index/upload";
     };
 
+    @IsAdmin
     @PostMapping("/upload")
     public String upload(MultipartFile file, Model model) {
         String originName = file.getOriginalFilename();
