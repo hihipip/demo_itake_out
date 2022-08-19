@@ -12,6 +12,8 @@ import com.boss.demo.vo.DishVo;
 import com.boss.demo.vo.SearchVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     @Transactional
+    @CacheEvict(value="dishVoCache",allEntries = true)
     public DishVo saveDishWithFlavor(DishVo dishVo) {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishVo,dish);
@@ -64,6 +67,7 @@ public class DishServiceImpl implements DishService {
      */
     @Override
     @Transactional
+    @CacheEvict(value="dishVoCache",allEntries = true)
     public DishVo update(DishVo dishVo,Long dishId){
         Dish dbDish = dishRepository.getReferenceById(dishId);
         dishVo.setCreateTime(dbDish.getCreateTime());
@@ -122,6 +126,7 @@ public class DishServiceImpl implements DishService {
      * @return
      */
     @Override
+    @Cacheable(value="dishVoCache",key = "'dish_' + #searchVo.categoryId + '_' + #searchVo.searchName")
     public List<DishVo> getAll(SearchVo searchVo) {
         List<Dish> dishs = null;
         if( searchVo.getCategoryId()==0 ){

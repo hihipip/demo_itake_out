@@ -5,12 +5,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "tb_dish_flavor")
 @Data
 @NoArgsConstructor
-public class DishFlavor extends BaseEntity {
+public class DishFlavor extends BaseEntity implements Serializable {
 
     public DishFlavor(String name,String description){
         this.name = name;

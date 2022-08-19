@@ -6,6 +6,8 @@ import com.boss.demo.repository.CategoryRepository;
 import com.boss.demo.service.CategoryService;
 import com.boss.demo.vo.SearchVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CacheEvict(value="categoryCache",allEntries = true)
     public Category updateCategory(Category category) {
         Category dbMember = categoryRepository.findById(category.getId()).get();
         category.setCreateTime(dbMember.getCreateTime());
@@ -55,6 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value="categoryCache",key = "'cat_' + #type")
     public List<Category> getAll(int type) {
         Sort sort = Sort.by(Sort.Direction.ASC,"sort");
         List<Category> list = categoryRepository.findByType(type,sort);

@@ -24,6 +24,9 @@ spring:
         max-wait: 5ms
         max-idle: 4
         min-idle: 0
+  cache:
+    redis:
+      time-to-live: 3600000
   data:
     redis:
       repositories:

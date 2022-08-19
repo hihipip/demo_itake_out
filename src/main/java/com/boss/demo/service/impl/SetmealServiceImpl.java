@@ -10,6 +10,8 @@ import com.boss.demo.vo.SearchVo;
 import com.boss.demo.vo.SetmealVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +34,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
+    @CacheEvict(value="setmealVoCache",allEntries = true)
     public SetmealVo saveSetmealWithDish(SetmealVo setmealVo) {
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealVo,setmeal);
@@ -77,6 +80,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     }
 
+    @Cacheable(value="setmealVoCache",key = "'setmeal_' + #searchVo.categoryId + '_' + #searchVo.searchName")
     public List<SetmealVo> getAll(SearchVo searchVo){
         List<Setmeal>  setmeals = setmealRepository.findAllByCategoryId(searchVo.getCategoryId(),Sort.by(Sort.Direction.ASC, "id"));
         List<SetmealVo> setmealVos = setmeals.stream().map(setmeal -> {
@@ -94,6 +98,7 @@ public class SetmealServiceImpl implements SetmealService {
 
 
     @Override
+    @Cacheable(value="setmealVoCache",key="'setmeal_'+#id")
     public SetmealVo getSetmealWithDish(long id) {
         Setmeal setmeal = setmealRepository.getReferenceById(id);
         if( setmeal == null ) return null;
@@ -108,6 +113,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     @Override
     @Transactional
+    @CacheEvict(value="setmealVoCache",allEntries = true)
     public SetmealVo update(SetmealVo setmealVo, Long setmealId) {
         Setmeal dbSetmeal = setmealRepository.getReferenceById(setmealId);
         setmealVo.setCreateTime(dbSetmeal.getCreateTime());

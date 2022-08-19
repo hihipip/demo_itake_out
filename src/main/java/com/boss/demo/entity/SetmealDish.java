@@ -5,11 +5,12 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "tb_setmeal_dish")
 @Data
-public class SetmealDish extends BaseEntity {
+public class SetmealDish extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
