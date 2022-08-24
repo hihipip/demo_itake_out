@@ -4,10 +4,12 @@ import com.boss.demo.entity.Category;
 import com.boss.demo.entity.Dish;
 import com.boss.demo.entity.DishFlavor;
 import com.boss.demo.entity.Member;
+import com.boss.demo.handler.GlobalException;
 import com.boss.demo.repository.CategoryRepository;
 import com.boss.demo.repository.DishFlavorRepository;
 import com.boss.demo.repository.DishRepository;
 import com.boss.demo.service.DishService;
+import com.boss.demo.tools.CodeMsg;
 import com.boss.demo.vo.DishVo;
 import com.boss.demo.vo.SearchVo;
 import org.springframework.beans.BeanUtils;
@@ -43,6 +45,9 @@ public class DishServiceImpl implements DishService {
     @Transactional
     @CacheEvict(value="dishVoCache",allEntries = true)
     public DishVo saveDishWithFlavor(DishVo dishVo) {
+        if( dishVo.getDishFlavors()==null ){
+            throw new GlobalException(CodeMsg.CHOICE_FLAVOR_ERROR);
+        }
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishVo,dish);
         dish = dishRepository.save(dish);
@@ -90,6 +95,14 @@ public class DishServiceImpl implements DishService {
         dishFlavorRepository.saveAll(flavors);
         return dishVo;
 
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value="dishVoCache",allEntries = true)
+    public void deleteDishWithFlavor(long id) {
+        dishFlavorRepository.deleteByDishId(id);
+        dishRepository.deleteById(id);
     }
 
     @Override

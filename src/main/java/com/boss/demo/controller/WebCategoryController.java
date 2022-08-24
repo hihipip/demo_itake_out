@@ -29,7 +29,7 @@ public class WebCategoryController {
 
 
 
-    @GetMapping("/")
+    @GetMapping
     public String list(SearchVo searchVo, Model model){
         model.addAttribute("searchVo", searchVo); //搜尋參數
         model.addAttribute("categories", categoryService.getCategories(searchVo));
@@ -44,6 +44,9 @@ public class WebCategoryController {
 
     @PostMapping("/addSave")
     public String addSave( @Valid Category category, BindingResult result,Model model){
+        if( result.hasErrors() ){
+            return "category/add";
+        }
         try {
             categoryService.saveCategory(category);
         }catch(Exception e){
@@ -53,7 +56,7 @@ public class WebCategoryController {
         if( result.hasErrors() ){
             return "category/add";
         }
-        return "redirect:/web/category/";
+        return "redirect:/web/category";
     }
 
     @GetMapping("/edit/{id}")
@@ -66,7 +69,7 @@ public class WebCategoryController {
     @PostMapping("/editSave")
     public String editSave(Category category,Model model){
         categoryService.updateCategory(category);
-        return "redirect:/web/category/";
+        return "redirect:/web/category";
     }
 
 

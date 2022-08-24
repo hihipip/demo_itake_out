@@ -1,10 +1,12 @@
 package com.boss.demo.service.impl;
 
 import com.boss.demo.entity.*;
+import com.boss.demo.handler.GlobalException;
 import com.boss.demo.repository.SetmealDishRepository;
 import com.boss.demo.repository.SetmealRepository;
 import com.boss.demo.service.CategoryService;
 import com.boss.demo.service.SetmealService;
+import com.boss.demo.tools.CodeMsg;
 import com.boss.demo.vo.DishVo;
 import com.boss.demo.vo.SearchVo;
 import com.boss.demo.vo.SetmealVo;
@@ -36,6 +38,10 @@ public class SetmealServiceImpl implements SetmealService {
     @Transactional
     @CacheEvict(value="setmealVoCache",allEntries = true)
     public SetmealVo saveSetmealWithDish(SetmealVo setmealVo) {
+        if( setmealVo.getSetmealDishes()==null ){
+            throw new GlobalException(CodeMsg.CHOICE_FLAVOR_ERROR);
+        }
+
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealVo,setmeal);
         setmeal = setmealRepository.save(setmeal);

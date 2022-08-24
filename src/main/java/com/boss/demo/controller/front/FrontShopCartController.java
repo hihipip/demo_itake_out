@@ -1,7 +1,7 @@
 package com.boss.demo.controller.front;
 
 import com.boss.demo.entity.*;
-import com.boss.demo.handler.MyException;
+import com.boss.demo.handler.GlobalException;
 import com.boss.demo.repository.ConsumerRepository;
 import com.boss.demo.repository.ShopCartRepository;
 import com.boss.demo.security.CustomUser;
@@ -9,6 +9,7 @@ import com.boss.demo.security.roles.IsUser;
 import com.boss.demo.service.CategoryService;
 import com.boss.demo.service.DishService;
 import com.boss.demo.service.SetmealService;
+import com.boss.demo.tools.CodeMsg;
 import com.boss.demo.tools.R;
 import com.boss.demo.vo.SearchVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,7 +28,7 @@ import java.util.List;
  * 購物車相關
  */
 @Controller
-@RequestMapping("front")
+@RequestMapping("/front")
 public class FrontShopCartController {
 
     @Autowired
@@ -98,7 +99,7 @@ public class FrontShopCartController {
                 try{
                     consumer = objectMapper.readValue(json, Consumer.class);
                 }catch(Exception e){
-                    throw new MyException(100,"轉換錯誤");
+                    throw new GlobalException(new CodeMsg(1000,"轉換錯誤"));
                 }
             }
             //訂單填入

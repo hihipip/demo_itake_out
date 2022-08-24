@@ -1,8 +1,9 @@
 package com.boss.demo.controller;
 
 import com.boss.demo.entity.Consumer;
-import com.boss.demo.handler.MyException;
+import com.boss.demo.handler.GlobalException;
 import com.boss.demo.security.CustomUser;
+import com.boss.demo.tools.CodeMsg;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,9 +19,12 @@ public class ConsumerInfo {
 
     public long getLoginConsumerId(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUser customUser = (CustomUser)authentication.getPrincipal();
-        long consumerId = customUser.getId();
-        return consumerId;
+        if( authentication!=null && authentication.getPrincipal() instanceof CustomUser ){ //如果認證不是Customer有可能anonymous
+            CustomUser customUser = (CustomUser)authentication.getPrincipal();
+            long consumerId = customUser.getId();
+            return consumerId;
+        }
+        return 0;
     }
 
     public Consumer getConsumer(){
@@ -34,7 +38,7 @@ public class ConsumerInfo {
             try{
                 consumer = objectMapper.readValue(json, Consumer.class);
             }catch(Exception e){
-                throw new MyException(100,"轉換錯誤");
+                throw new GlobalException(new CodeMsg(1000,"轉換錯誤"));
             }
         }
         return consumer;

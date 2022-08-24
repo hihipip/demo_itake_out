@@ -46,10 +46,10 @@ public class MyUserDetailsService implements UserDetailsService {
         }
         if( consumer!=null ){
             String role = "ROLE_USER,ROLE_MANAGER";
-            return new CustomUser(consumer.getId(), consumer.getPhone(), passwordEncoder.encode(consumer.getPassword()), getGrants(role));
+            return new CustomUser(consumer.getId(), consumer.getPhone(), passwordEncoder.encode(consumer.getPassword()), "consumer",getGrants(role));
         } else if( member!=null ){
             String role = ItemsInfo.getMemberRoleMessage(member.getRole());
-            return new CustomUser(member.getId(), member.getUsername(), passwordEncoder.encode(member.getPassword()), getGrants(role));
+            return new CustomUser(member.getId(), member.getUsername(), passwordEncoder.encode(member.getPassword()), "member", getGrants(role));
         }
         return null;
 

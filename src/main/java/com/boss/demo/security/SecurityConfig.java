@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 
 @Configuration
@@ -24,6 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MyUserDetailsService myUserDetailsService;
+    @Autowired
+    private MyLogoutSuccessHandler myLogoutSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,7 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutUrl("/web/logout")// 自定義登出介面
-                .logoutSuccessUrl("/web/member/")
+                //.logoutSuccessHandler(myLogoutSuccessHandler)
+                //.logoutSuccessUrl("/web/member/")
                 .and()
                 .rememberMe() // 开启记住密码功能
                 .rememberMeServices(getRememberMeServices()) // 必须提供
@@ -55,8 +60,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().accessDeniedPage("/web/403"); // 权限不足自动跳转403
         http.logout().permitAll();
-        http.logout().logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
+        //http.logout().logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
+        http.logout().logoutSuccessHandler(myLogoutSuccessHandler);
+
+        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
+
+
+
+    @Bean
+    public JwtTokenFilter authenticationTokenFilterBean() throws Exception {
+        return new JwtTokenFilter();
+    }
+
 
     /**
      * 如果要设置cookie过期时间或其他相关配置，请在下方自行配置

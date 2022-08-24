@@ -1,5 +1,11 @@
 server:
   port: 8080
+  error:
+    path: /error
+line:
+  clientId: kFulu7Km2yIyafaYg97AfJ
+  clientSecret: G5Pd7FrjGZGLy9PhrwnplP26vkCDqdzuiUzGBBeX27W
+  clientReturnUrl: http://localhost:8080/front/linenotify
 spring:
   application:
     name: reggie_take_out

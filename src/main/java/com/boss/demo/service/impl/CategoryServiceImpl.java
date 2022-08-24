@@ -64,4 +64,9 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> list = categoryRepository.findByType(type,sort);
         return list;
     }
+
+    public void deleteById(long id){
+        this.categoryRepository.deleteById(id);
+    }
+
 }

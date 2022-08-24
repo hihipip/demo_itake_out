@@ -66,19 +66,23 @@ public class WebDishController {
     @PostMapping("/editSave")
     public String editSave(@Valid DishVo dishVo,Model model){
         dishService.update(dishVo,dishVo.getId());
-        return "redirect:/web/dish/";
+        return "redirect:/web/dish";
     }
 
 
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable(value = "id") long id, Model model){
+        dishService.deleteDishWithFlavor(id);
+        return "redirect:/web/dish";
+    }
 
-    @GetMapping("/")
+
+    @GetMapping
     public String list(SearchVo searchVo, Model model){
         model.addAttribute("searchVo", searchVo); //搜尋參數
         model.addAttribute("dishVos", dishService.getAllDish(searchVo));
-
         //測試呼叫Service的方法
         model.addAttribute("memberService", memberService);
-
         return "dish/index";
     }
 

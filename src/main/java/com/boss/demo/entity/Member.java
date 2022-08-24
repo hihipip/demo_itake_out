@@ -13,12 +13,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name="tb_member")
 @Data
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +52,14 @@ public class Member extends BaseEntity {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date birthday;
 
+    //private long deptId; //部門 ID
 
+    //@Transient
+    //private String deptName; //部門名稱
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="dept_id", nullable=true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Dept dept ;
 
 }

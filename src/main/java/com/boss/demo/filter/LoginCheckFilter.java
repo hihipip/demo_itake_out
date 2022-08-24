@@ -1,4 +1,4 @@
-package com.boss.demo;
+package com.boss.demo.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

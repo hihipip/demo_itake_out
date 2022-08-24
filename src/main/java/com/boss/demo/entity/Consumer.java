@@ -34,5 +34,7 @@ public class Consumer extends BaseEntity implements Serializable {
     @Transient
     private String smsCode;
 
+    @Transient
+    private String checkCode;
 
 }

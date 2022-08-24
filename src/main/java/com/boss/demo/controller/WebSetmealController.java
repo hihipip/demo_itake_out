@@ -4,6 +4,7 @@ import com.boss.demo.entity.Category;
 import com.boss.demo.entity.Dish;
 import com.boss.demo.entity.DishFlavor;
 import com.boss.demo.entity.SetmealDish;
+import com.boss.demo.handler.GlobalException;
 import com.boss.demo.security.roles.IsAdmin;
 import com.boss.demo.service.CategoryService;
 import com.boss.demo.service.DishService;
@@ -49,6 +50,9 @@ public class WebSetmealController {
     public String addSave(@Valid SetmealVo setmealVo, BindingResult result, Model model){
         try {
             setmealService.saveSetmealWithDish(setmealVo);
+        }catch(GlobalException e){
+            ObjectError error = new ObjectError("globalError", ((GlobalException)e).getCodeMsg().getMsg());
+            result.addError(error);
         }catch(Exception e){
             e.printStackTrace();
             ObjectError error = new ObjectError("globalError", "SQL語法錯誤");
@@ -58,7 +62,7 @@ public class WebSetmealController {
             this.setModel(model,setmealVo);
             return "setmeal/add";
         }
-        return "redirect:/web/setmeal/";
+        return "redirect:/web/setmeal";
     }
 
     @GetMapping("/edit/{id}")
@@ -71,11 +75,11 @@ public class WebSetmealController {
     @PostMapping("/editSave")
     public String editSave(@Valid SetmealVo setmealVo,Model model){
         setmealService.update(setmealVo,setmealVo.getId());
-        return "redirect:/web/setmeal/";
+        return "redirect:/web/setmeal";
     }
 
 
-    @GetMapping("/")
+    @GetMapping
     public String list(SearchVo searchVo, Model model){
         model.addAttribute("searchVo", searchVo); //搜尋參數
         model.addAttribute("setmealVos", setmealService.getAllSetmeal(searchVo));

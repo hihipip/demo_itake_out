@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extra-springsecurity5">
+
+<div th:replace="~{include/meta::meta_html}"></div>
+<body>
+
+
+<div th:replace="~{include/nav::nav_mgt_html('dept')}"></div>
+<div class="container">
+    <h1>部門列表</h1>
+
+
+    <a th:href="@{/web/dept/add}">新建</a>
+    <table border="1" class="table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>名稱</th>
+            <th>建立時間</th>
+            <th>功能</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="dept:${depts}">
+            <td th:text="${dept.id}"></td>
+            <td th:text="${dept.name}"></td>
+            <td th:text="${#dates.format(dept.createTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
+            <td>
+                <a th:href="@{/web/dept/edit/{id}(id=${dept.id})}">修改</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        目前頁<span th:text="${depts.pageable.pageNumber}"></span>
+        總頁數︰<span th:text="${depts.totalPages}"></span>
+        總筆數︰<span th:text="${depts.totalElements}"></span>
+    </div>
+    <a th:href="@{/web/dept/?page={page}(page=${depts.pageable.pageNumber-1})}">上一頁</a>
+    <a th:href="@{/web/dept/?page={page}(page=${depts.pageable.pageNumber+1})}">下一頁</a>
+
+</div>
+
+<div th:replace="~{include/meta::footer_html}"></div>
+
+</body>
+</html>
+
+

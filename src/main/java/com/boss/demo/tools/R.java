@@ -17,19 +17,25 @@ public class R {
     public static R ok() {
         R r = new R();
         r.setSuccess(true);
-        r.setCode(ResultCode.SUCCESS);
-        r.setMessage("成功");
+        r.setCode(CodeMsg.SUCCESS.getCode());
+        r.setMessage(CodeMsg.SUCCESS.getMsg());
         return r;
     }
 
-    public static R error() {
+    public static R error(CodeMsg codeMsg) {
         R r = new R();
         r.setSuccess(false);
-        r.setCode(ResultCode.ERROR);
-        r.setMessage("失败");
+        r.setCode(codeMsg.getCode());
+        r.setMessage(codeMsg.getMsg());
         return r;
     }
 
+    public R message(String message) {
+        this.setMessage(message);
+        return this;
+    }
+
+/*
     public R success(Boolean success) {
         this.setSuccess(success);
         return this;
@@ -44,7 +50,7 @@ public class R {
         this.setMessage(message);
         return this;
     }
-
+*/
     public R data(Map<String, Object> map) {
         this.setData(map);
         return this;

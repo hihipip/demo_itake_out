@@ -3,9 +3,12 @@
 
 <div th:replace="~{include/meta::meta_html}"></div>
 <body>
-<div class="container">
-    <h1>套餐管理</h1>
 
+
+<div th:replace="~{include/nav::nav_mgt_html('setmeal')}"></div>
+
+<div class="container">
+    <h1>新建/修改套餐</h1>
 
     <form th:action="${setmealVo.id==0} ? @{/web/setmeal/addSave} : @{/web/setmeal/editSave}" th:object="${setmealVo}" method="post">
         <input type="hidden" class="form-control" th:field="*{id}" />
@@ -105,7 +108,7 @@
         $("#modalDiv").modal({backdrop: 'static',keyboard: false});
         $.ajax({
             type: "get",
-            url: "/dish/?categoryId=0&rnd=" + new Date(),
+            url: "/api/dish?categoryId=0&rnd=" + new Date(),
             dataType: "json",
             success: function (response) {
                 if( response.success ){
@@ -129,9 +132,6 @@
             }
         });
     }
-
-
-
 </script>
 
 <div class="modal" tabindex="-1" id="modalDiv">
@@ -165,7 +165,7 @@
 
 
 
-
+<!-- 上傳圖片 -->
 <div class="modal" tabindex="-1" id="uploadDiv">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -189,12 +189,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-<!-- 上傳圖片 -->
 <script>
     function choiceImage(){
         $("#uploadDiv").modal({backdrop: 'static',keyboard: false});

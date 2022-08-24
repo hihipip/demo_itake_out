@@ -33,6 +33,24 @@ public class ItemsInfo {
     }
 
 
+
+    public static ArrayList<Items> getDishFlavorChoices() {
+        ArrayList<Items> list = new ArrayList<Items>();
+        Items status = new Items(0, "辣度", "大辣、中辣、小辣");
+        list.add(status);
+        status = new Items(1, "酸度", "大酸、中酸、小酸");
+        list.add(status);
+        status = new Items(2, "甜度", "大甜、中甜、小甜");
+        list.add(status);
+
+        return list;
+    }
+
+
+
+
+
+
     public static String toUpperCase(String s){
         return s.toLowerCase();
     }

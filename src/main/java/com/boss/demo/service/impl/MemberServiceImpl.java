@@ -65,7 +65,9 @@ public class MemberServiceImpl implements MemberService {
             e.printStackTrace();
         }
         String searchName = searchVo.getSearchName()!=null ? searchVo.getSearchName() : "";
-        Page<Member> list = (Page<Member>) memberRepository.findAllByNameLikeAndCreateTimeBetween("%"+searchName+"%",startDate,endDate , sortedBy);
+        //以下二種方式都可以
+        //Page<Member> list = (Page<Member>) memberRepository.findAllByNameLikeAndCreateTimeBetween("%"+searchName+"%",startDate,endDate , sortedBy);
+        Page<Member> list = (Page<Member>) memberRepository.findAllByQuery("%"+searchName+"%",startDate,endDate , sortedBy);
 
         //Page<Member> list = (Page<Member>) memberRepository.findAllByNameLikeOrUsernameContains("%小%","ter" , sortedBy);
         //Page<Member> list = (Page<Member>) memberRepository.findAll(sortedByName);

@@ -6,6 +6,7 @@ import com.boss.demo.entity.DishFlavor;
 import com.boss.demo.entity.Member;
 import com.boss.demo.repository.ConsumerRepository;
 import com.boss.demo.tools.R;
+import com.boss.demo.tools.RandomValidateCodeUtil;
 import com.boss.demo.tools.ValidatorUtil;
 import com.boss.demo.vo.DishVo;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,13 +24,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Controller
-@RequestMapping("front")
+@RequestMapping("/front")
 public class FrontConsumerController {
 
     @Autowired
@@ -97,8 +99,14 @@ public class FrontConsumerController {
     }
 
     @PostMapping("/doLogin")
-    public String doLogin(Consumer consumer, BindingResult result, Model model){
+    public String doLogin(Consumer consumer, BindingResult result, Model model, HttpSession session){
         try {
+            String random = (String) session.getAttribute(RandomValidateCodeUtil.RANDOMCODEKEY);
+            if( !consumer.getCheckCode().equalsIgnoreCase(random) ){
+                throw new Exception("驗證碼錯誤");
+            }
+
+
             Consumer dbConsumer = consumerRepository.findByPhone(consumer.getPhone());
             if( dbConsumer==null ){
                 throw new Exception("查無此人");

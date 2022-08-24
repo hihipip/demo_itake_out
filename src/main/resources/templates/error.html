@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extra-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-error2222
+ERROR
+<p th:utext="${exception}"></p>
+<p th:utext="${status}"></p>
+
 </body>
 </html>

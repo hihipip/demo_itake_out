@@ -1,7 +1,9 @@
 package com.boss.demo.controller;
 
+import com.boss.demo.entity.Dept;
 import com.boss.demo.entity.Member;
 import com.boss.demo.security.roles.IsAdmin;
+import com.boss.demo.service.DeptService;
 import com.boss.demo.service.MemberService;
 import com.boss.demo.vo.SearchVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.thymeleaf.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @IsAdmin
 @Controller
@@ -25,10 +28,18 @@ public class WebMemberController {
 
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private DeptService deptService;
 
 
-
-    @GetMapping("/")
+    /**
+     * 會員列表
+     * @param searchVo
+     * @param model
+     * @param request
+     * @return
+     */
+    @GetMapping
     public String list(SearchVo searchVo, Model model, HttpServletRequest request){
         model.addAttribute("searchVo", searchVo); //搜尋參數
         model.addAttribute("members", memberService.getAllMember(searchVo));
@@ -37,8 +48,7 @@ public class WebMemberController {
 
     @GetMapping("/add")
     public String add(Model model, HttpServletRequest request){
-        this.setModel(model);
-        model.addAttribute("member", new Member());
+        this.setModel(model,null);
         return "member/add";
     }
 
@@ -51,7 +61,7 @@ public class WebMemberController {
             result.addError(error);
         }
         if( result.hasErrors() ){
-            this.setModel(model);
+            this.setModel(model,member);
             return "member/add";
         }
         return "redirect:/web/member/";
@@ -60,8 +70,7 @@ public class WebMemberController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable(value = "id") long id,Model model){
         Member member = memberService.getMemberById(id);
-        this.setModel(model);
-        member.setInterests(member.getInterest().split(","));
+        this.setModel(model,member);
         model.addAttribute("member", member);
         return "member/edit";
     }
@@ -78,9 +87,17 @@ public class WebMemberController {
         return "redirect:/web/member/";
     }
 
-    private void setModel(Model model){
+    private void setModel(Model model,Member member){
         String[] interests = new String[]{"藍球", "棒球", "足球", "撞球"};
+        if( member==null ){
+            member = new Member();
+        } else {
+            member.setInterests(member.getInterest().split(","));
+        }
+        List<Dept> depts = this.deptService.getAll();
         model.addAttribute("interests", interests);
+        model.addAttribute("member", member);
+        model.addAttribute("depts", depts);
     }
 
 }
