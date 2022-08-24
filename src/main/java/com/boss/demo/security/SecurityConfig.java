@@ -36,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         //解決 in a frame because it set X-Frame-Options to
         http.headers().frameOptions().disable();
         http.csrf().disable();
@@ -52,18 +53,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMeServices(getRememberMeServices()) // 必须提供
                 .key(SECRET_KEY) // 此SECRET需要和生成TokenBasedRememberMeServices的密钥相同
                 .and()
-                /*
-                 * 默认允许所有路径所有人都可以访问，确保静态资源的正常访问。
-                 * 后面再通过方法注解的方式来控制权限。
-                 */
+                 //默认允许所有路径所有人都可以访问，确保静态资源的正常访问。
+                 //后面再通过方法注解的方式来控制权限。
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
                 .exceptionHandling().accessDeniedPage("/web/403"); // 权限不足自动跳转403
         http.logout().permitAll();
         //http.logout().logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
         http.logout().logoutSuccessHandler(myLogoutSuccessHandler);
-
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+
+        /*
+        http.headers().
+                frameOptions().disable();
+        http.csrf().disable();
+        http.formLogin()
+                .loginPage("/web/login").permitAll() // 自定義登入介面
+                .and()
+                .logout()
+                .logoutUrl("/web/logout").permitAll()// 自定義登出介面
+                .and()
+                .rememberMe() // 开启记住密码功能
+                .rememberMeServices(getRememberMeServices()) // 必须提供
+                .key(SECRET_KEY) // 此SECRET需要和生成TokenBasedRememberMeServices的密钥相同
+                .and()
+                .authorizeRequests().anyRequest().authenticated()
+                .and()
+                .exceptionHandling().accessDeniedPage("/web/403"); // 权限不足自动跳转403
+        http.logout().permitAll();
+        //http.logout().logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
+        http.logout().logoutSuccessHandler(myLogoutSuccessHandler);
+        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        */
+
+
+
+
     }
 
 

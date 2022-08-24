@@ -2,6 +2,14 @@ server:
   port: 8080
   error:
     path: /error
+#  ssl:
+#    key-alias: localhost
+#    enabled: true
+#    key-store: classpath:keystore.p12
+#    key-store-password: android
+#    key-store-type: PKCS12
+
+
 line:
   clientId: kFulu7Km2yIyafaYg97AfJ
   clientSecret: G5Pd7FrjGZGLy9PhrwnplP26vkCDqdzuiUzGBBeX27W

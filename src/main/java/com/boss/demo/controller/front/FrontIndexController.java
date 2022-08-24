@@ -52,6 +52,13 @@ public class FrontIndexController {
     }
 
 
+    @GetMapping("/chat")
+    public String chat(){
+        return "front/chat";
+    }
+
+
+
 
 
 }
