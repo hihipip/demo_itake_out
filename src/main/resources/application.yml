@@ -25,6 +25,7 @@ spring:
   jpa:
     hibernate.ddl-auto: none
     show-sql: true
+    open-in-view: false
   thymeleaf:
     cache: false
   redis:
@@ -45,5 +46,13 @@ spring:
     redis:
       repositories:
         enabled: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 839981015892-ptan87gkiobet3gib4svutb6ndkvhft5.apps.googleusercontent.com
+            client-secret: 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
 demo:
   path: D:/upload/
+

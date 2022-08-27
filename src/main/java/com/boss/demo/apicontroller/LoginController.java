@@ -10,6 +10,7 @@ import com.boss.demo.tools.R;
 import com.boss.demo.vo.LoginVo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/login")
 public class LoginController {
@@ -35,6 +37,7 @@ public class LoginController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
     private RedisTemplate redisTemplate;
 
     @GetMapping("/hello")
@@ -58,6 +61,8 @@ public class LoginController {
         if( !member.getPassword().equals(loginVo.getPassword()) ){
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
         }
+
+        log.info("Login Starting");
 
         //將登入管理者資料記錄在redis
         ObjectMapper objectMapper = new ObjectMapper();
